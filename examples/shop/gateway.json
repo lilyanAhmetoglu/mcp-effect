@@ -1,0 +1,31 @@
+{
+  "$schema": "../../schema/config.schema.json",
+  "name": "shop-gateway",
+  "upstreams": {
+    "shop": {
+      "command": "node",
+      "args": [
+        "./shop-server.mjs"
+      ]
+    }
+  },
+  "always": [
+    "shop__get_order"
+  ],
+  "rules": [
+    {
+      "name": "refunds",
+      "when": {
+        "order.status": "failed"
+      },
+      "tools": [
+        "shop__refund_order",
+        "shop__email_customer"
+      ],
+      "hint": "Refund and email tools appear when an order has failed."
+    }
+  ],
+  "state": {
+    "file": "./state.json"
+  }
+}

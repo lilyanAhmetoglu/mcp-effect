@@ -1,0 +1,12 @@
+export { createGateway, Gateway } from './gateway.js';
+export type { ChangeEvent, GatewayOptions, ScopeInput, ToolCallContext, ToolHandler } from './gateway.js';
+export { conditionPaths, evaluate, matchTools, RuleEngine, validateRule } from './rules.js';
+export type { Condition, Operator, RuleContext, UseToolsRule } from './rules.js';
+export { deepEqual, deepMerge, getPath, GLOBAL_SCOPE, MemoryStateStore } from './state.js';
+export type { State, StateStore } from './state.js';
+export { connectUpstream } from './upstream.js';
+export type { HttpUpstreamConfig, StdioUpstreamConfig, UpstreamClient, UpstreamConfig } from './upstream.js';
+export { loadConfig, parseConfig } from './config.js';
+export type { GatewayConfig } from './config.js';
+export { startFromConfig } from './run.js';
+export type { RunningGateway } from './run.js';

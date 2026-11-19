@@ -1,0 +1,205 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/lilyanAhmetoglu/mcp-effect/main/schema/config.schema.json",
+  "title": "mcp-effect config",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "state": {
+      "type": "object",
+      "description": "A plain JSON object."
+    },
+    "condition": {
+      "type": "object",
+      "description": "State paths and the values they must have. Use all, any and not to combine conditions."
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "Server name shown to MCP clients."
+    },
+    "version": {
+      "type": "string"
+    },
+    "separator": {
+      "type": "string",
+      "default": "__",
+      "description": "Text between an upstream name and its tool name."
+    },
+    "denied": {
+      "enum": [
+        "hidden",
+        "explain"
+      ],
+      "default": "hidden",
+      "description": "What a call to an unmounted tool gets back."
+    },
+    "instructions": {
+      "type": "string",
+      "description": "Extra text for the server instructions."
+    },
+    "scope": {
+      "type": "string",
+      "description": "A fixed scope for stdio mode."
+    },
+    "upstreams": {
+      "type": "object",
+      "description": "MCP servers to put behind the gateway, by name.",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "command"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "command": {
+                "type": "string"
+              },
+              "args": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "cwd": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "headers": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "always": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tools that are always mounted. * is a wildcard."
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "tools"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "when": {
+            "$ref": "#/definitions/condition"
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hint": {
+            "type": "string",
+            "description": "One short line that tells the model when these tools appear."
+          }
+        }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "initial": {
+          "$ref": "#/definitions/state"
+        },
+        "scopes": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/state"
+          }
+        },
+        "file": {
+          "type": "string",
+          "description": "A JSON file to watch: { \"global\": {}, \"scopes\": {} }."
+        }
+      }
+    },
+    "http": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "port": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "default": 3000
+        },
+        "host": {
+          "type": "string",
+          "default": "127.0.0.1"
+        },
+        "path": {
+          "type": "string",
+          "default": "/mcp"
+        },
+        "allowedHosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "clients": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "tokenEnv"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "tokenEnv": {
+                "type": "string"
+              },
+              "scope": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "adminTokenEnv": {
+          "type": "string",
+          "description": "Environment variable that holds the admin token for the /state API."
+        }
+      }
+    }
+  }
+}

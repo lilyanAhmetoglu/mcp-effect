@@ -1,0 +1,8 @@
+{
+  "global": {
+    "order": {
+      "status": "paid"
+    }
+  },
+  "scopes": {}
+}

@@ -1,0 +1,63 @@
+{
+  "name": "mcp-effect",
+  "version": "0.1.0",
+  "description": "useEffect for MCP tools: a gateway that mounts tools only when state allows.",
+  "license": "MIT",
+  "author": "Lilyan Aldimashki",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lilyanAhmetoglu/mcp-effect.git"
+  },
+  "homepage": "https://github.com/lilyanAhmetoglu/mcp-effect#readme",
+  "bugs": {
+    "url": "https://github.com/lilyanAhmetoglu/mcp-effect/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "gateway",
+    "tools",
+    "agents",
+    "useEffect",
+    "policy"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "mcp-effect": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "schema",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "example": "npm run build && node examples/library.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/client": "^2.4.0",
+    "@modelcontextprotocol/node": "^2.1.2",
+    "@modelcontextprotocol/server": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^5.1.1"
+  }
+}
