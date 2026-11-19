@@ -332,6 +332,22 @@ describe('upstream servers', () => {
         expect(upstream.calls).toEqual([{ name: 'refund_order', arguments: { orderId: '1' } }]);
     });
 
+    it('does not pass the upstream\'s own protocol metadata on to the client', async () => {
+        const upstream = fakeUpstream(['a']);
+        upstream.callTool = async () => ({
+            ...text('done'),
+            _meta: { 'io.modelcontextprotocol/serverInfo': { name: 'secret-upstream', version: '1' }, 'example.com/trace': 'abc' }
+        });
+        const gateway = createGateway({ always: ['up__a'], name: 'the-gateway' });
+        open.push(gateway);
+        await gateway.upstream('up', upstream);
+        const client = await connectModern(gateway.http());
+        open.push(client);
+        const result = await client.callTool({ name: 'up__a', arguments: {} });
+        expect(JSON.stringify(result)).not.toContain('secret-upstream');
+        expect((result._meta as Record<string, unknown>)['example.com/trace']).toBe('abc');
+    });
+
     it('picks up new and removed upstream tools on refresh', async () => {
         const upstream = fakeUpstream(['a']);
         const gateway = createGateway({ always: ['up__*'] });

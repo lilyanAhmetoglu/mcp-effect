@@ -25,3 +25,19 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run example
+
+  python-client:
+    # Proves the gateway works with a client in another language.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: pip install "mcp>=2.3"
+      - run: python examples/python-client/demo.py

@@ -35,7 +35,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "mcp-effect": "./dist/cli.js"
+    "mcp-effect": "dist/cli.js"
   },
   "files": [
     "dist",

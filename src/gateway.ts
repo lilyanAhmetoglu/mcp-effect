@@ -251,7 +251,8 @@ export class Gateway {
             this.tools.set(exposed, {
                 definition: { ...tool, name: exposed },
                 source: name,
-                call: (args, ctx) => client.callTool({ name: upstreamName, arguments: args }, ctx.signal ? { signal: ctx.signal } : undefined)
+                call: async (args, ctx) =>
+                    withoutProtocolMeta(await client.callTool({ name: upstreamName, arguments: args }, ctx.signal ? { signal: ctx.signal } : undefined))
             });
         }
         this.registryChanged();
@@ -555,6 +556,19 @@ export class Gateway {
             // The error reporter itself failed. There is nowhere left to report to.
         }
     }
+}
+
+/**
+ * An upstream stamps its own protocol metadata (such as its server name) on a
+ * result. The client is talking to the gateway, so that metadata must not pass
+ * through. Other `_meta` keys are kept.
+ */
+function withoutProtocolMeta(result: CallToolResult): CallToolResult {
+    const meta = (result as { _meta?: Record<string, unknown> })._meta;
+    if (!meta || typeof meta !== 'object') return result;
+    const kept = Object.fromEntries(Object.entries(meta).filter(([key]) => !key.startsWith('io.modelcontextprotocol/')));
+    const { _meta: _dropped, ...rest } = result as CallToolResult & { _meta?: unknown };
+    return (Object.keys(kept).length > 0 ? { ...rest, _meta: kept } : rest) as CallToolResult;
 }
 
 /** Creates a {@link Gateway}. */

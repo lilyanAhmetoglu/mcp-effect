@@ -143,6 +143,11 @@ A working copy of these files is in [`examples/shop`](examples/shop).
 
 See the [config reference](docs/config.md) for every field, the HTTP mode, and the state API.
 
+### From Python, or any other language
+
+[`examples/python-client`](examples/python-client) drives the gateway with the official Python MCP SDK, over stdio and over HTTP.
+[`examples/multi-user`](examples/multi-user) shows two callers with different tools.
+
 ## Use it as a library
 
 ```ts
@@ -243,7 +248,7 @@ Read more in [docs/design.md](docs/design.md).
 
 ## What is tested
 
-`npm test` runs 84 tests. They use the official MCP SDK client against a real gateway.
+`npm test` runs 85 tests. They use the official MCP SDK client against a real gateway.
 
 - Both protocol versions: 2026-07-28 and the older 2025 handshake.
 - Both transports: stdio and HTTP.
@@ -254,7 +259,15 @@ Read more in [docs/design.md](docs/design.md).
 
 In our own test run, the first `tools/list` of a scope took about 0.5 ms, and later ones about 0.1 ms. Your numbers will differ.
 
-It has not been tested by hand with every MCP client. If your client behaves differently, please [open an issue](https://github.com/lilyanAhmetoglu/mcp-effect/issues).
+Three other clients were also checked against the built command:
+
+| Client                           | What was checked                                                              |
+| -------------------------------- | ----------------------------------------------------------------------------- |
+| Official Python MCP SDK          | Listing, calling, refusals, notifications, two users over HTTP. Runs in CI.   |
+| MCP Inspector (command line)     | Listing and calling, with the state file in both positions.                   |
+| Claude Code                      | `claude mcp add` and the connection health check. No model conversation yet.  |
+
+It has not been tested with every MCP client. If your client behaves differently, please [open an issue](https://github.com/lilyanAhmetoglu/mcp-effect/issues).
 
 ## Running many copies
 
@@ -291,7 +304,7 @@ Other tools are close, and they are good. Pick the one that fits.
 
 ## Contributing
 
-Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md). Maintainers: see [docs/releasing.md](docs/releasing.md).
 
 ## License
 
