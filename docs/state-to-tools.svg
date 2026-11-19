@@ -1,44 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 444" width="960" height="444" role="img" aria-labelledby="t d">
-<title id="t">State decides which tools the model can see</title>
-<desc id="d">Two panels. When order status is paid, the model sees one tool: get_order. When order status is failed, the model sees three tools: get_order, refund_order and email_customer.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 548" width="1000" height="548" role="img" aria-labelledby="t d">
+<title id="t">A risky tool exists only after a person approves</title>
+<desc id="d">Before approval the agent sees read_logs and run_tests. After a person clicks approve, the deploy_to_production tool is mounted.</desc>
 <defs>
-  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#57606A"/></marker>
-  <marker id="arrowTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F766E"/></marker>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#57606A"/></marker>
+  <marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0F766E"/></marker>
+  <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#9A5B00"/></marker>
 </defs>
-<rect width="960" height="444" rx="16" fill="#FBFAF7"/>
-<text x="40" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#1F2328" text-anchor="start">State decides which tools exist</text>
-<text x="40" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#57606A" text-anchor="start">Same servers, same model. Only the state is different.</text>
-<rect x="40" y="104" width="420" height="304" rx="12" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.5"/>
-<text x="64" y="138" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#57606A" text-anchor="start">STATE</text>
-<rect x="64" y="150" width="372" height="38" rx="8" fill="#F1F2F4"/>
-<text x="80" y="174" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="600" fill="#1F2328" text-anchor="start">order.status = "paid"</text>
-<line x1="250" y1="196" x2="250" y2="222" stroke="#57606A" stroke-width="1.8" marker-end="url(#arrow)"/>
-<text x="64" y="248" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#57606A" text-anchor="start">WHAT THE MODEL SEES</text>
-<rect x="64" y="262" width="120" height="30" rx="15" fill="#FFFFFF" stroke="#1F2328" stroke-width="1.5"/>
-<text x="124.0" y="282" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#1F2328" text-anchor="middle">get_order</text>
-<rect x="64" y="300" width="144" height="30" rx="15" fill="#F1F2F4" stroke="#8C959F" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="136.0" y="320" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#8C959F" text-anchor="middle">refund_order</text>
-<rect x="64" y="338" width="160" height="30" rx="15" fill="#F1F2F4" stroke="#8C959F" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="144.0" y="358" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#8C959F" text-anchor="middle">email_customer</text>
-<text x="64" y="388" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#57606A" text-anchor="start"></text>
-<rect x="500" y="104" width="420" height="304" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.5"/>
-<text x="524" y="138" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#57606A" text-anchor="start">STATE</text>
-<rect x="524" y="150" width="372" height="38" rx="8" fill="#E6F4F1"/>
-<text x="540" y="174" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="600" fill="#0F766E" text-anchor="start">order.status = "failed"</text>
-<line x1="710" y1="196" x2="710" y2="222" stroke="#0F766E" stroke-width="1.8" marker-end="url(#arrowTeal)"/>
-<text x="524" y="248" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#57606A" text-anchor="start">WHAT THE MODEL SEES</text>
-<rect x="524" y="262" width="120" height="30" rx="15" fill="#FFFFFF" stroke="#1F2328" stroke-width="1.5"/>
-<text x="584.0" y="282" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#1F2328" text-anchor="middle">get_order</text>
-<rect x="524" y="300" width="144" height="30" rx="15" fill="#E6F4F1" stroke="#0F766E" stroke-width="1.5"/>
-<text x="596.0" y="320" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#0F766E" text-anchor="middle">refund_order</text>
-<rect x="524" y="338" width="160" height="30" rx="15" fill="#E6F4F1" stroke="#0F766E" stroke-width="1.5"/>
-<text x="604.0" y="358" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#0F766E" text-anchor="middle">email_customer</text>
-<text x="524" y="384" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#57606A" text-anchor="start"></text>
-<text x="200" y="281" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#57606A" text-anchor="start">always mounted</text>
-<text x="224" y="319" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#57606A" text-anchor="start">not mounted</text>
-<text x="660" y="281" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#57606A" text-anchor="start">always mounted</text>
-<text x="684" y="319" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#0F766E" text-anchor="start">mounted by the rule</text>
-<text x="240" y="357" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#57606A" text-anchor="start">not mounted</text>
-<text x="700" y="357" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#0F766E" text-anchor="start">mounted by the rule</text>
-<text x="64" y="388" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#57606A" text-anchor="start">Hidden tools cannot be called, even by a client with an old list.</text>
+<rect width="1000" height="548" rx="16" fill="#FBFAF7"/>
+<text x="40" y="56" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#1F2328" text-anchor="start">Risky tools exist only when your system says so</text>
+<text x="40" y="86" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#57606A" text-anchor="start">The agent still thinks and decides. But the state decides which tools it can reach.</text>
+<rect x="40" y="116" width="420" height="330" rx="12" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.5"/>
+<text x="64" y="152" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#1F2328" text-anchor="start">Before approval</text>
+<text x="64" y="184" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#57606A" text-anchor="start">STATE</text>
+<rect x="64" y="194" width="372" height="40" rx="8" fill="#F1F2F4"/>
+<text x="80" y="219" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14.5" font-weight="600" fill="#1F2328" text-anchor="start">deploy.approved = false</text>
+<line x1="250" y1="240" x2="250" y2="262" stroke="#57606A" stroke-width="1.8" marker-end="url(#a)"/>
+<text x="64" y="290" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#57606A" text-anchor="start">WHAT THE AGENT CAN USE</text>
+<rect x="64" y="304" width="120" height="34" rx="17" fill="#FFFFFF" stroke="#1F2328" stroke-width="1.5"/>
+<text x="124.0" y="326" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="600" fill="#1F2328" text-anchor="middle">read_logs</text>
+<text x="198" y="326" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#57606A" text-anchor="start">always there</text>
+<rect x="64" y="348" width="120" height="34" rx="17" fill="#FFFFFF" stroke="#1F2328" stroke-width="1.5"/>
+<text x="124.0" y="370" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="600" fill="#1F2328" text-anchor="middle">run_tests</text>
+<text x="198" y="370" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#57606A" text-anchor="start">always there</text>
+<rect x="64" y="392" width="216" height="34" rx="17" fill="#F1F2F4" stroke="#8C959F" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="172.0" y="414" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="600" fill="#8C959F" text-anchor="middle">deploy_to_production</text>
+<text x="294" y="414" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#57606A" text-anchor="start">does not exist</text>
+<rect x="540" y="116" width="420" height="330" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.5"/>
+<text x="564" y="152" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#0F766E" text-anchor="start">After a person clicks Approve</text>
+<text x="564" y="184" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#57606A" text-anchor="start">STATE</text>
+<rect x="564" y="194" width="372" height="40" rx="8" fill="#E6F4F1"/>
+<text x="580" y="219" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14.5" font-weight="600" fill="#0F766E" text-anchor="start">deploy.approved = true</text>
+<line x1="750" y1="240" x2="750" y2="262" stroke="#0F766E" stroke-width="1.8" marker-end="url(#at)"/>
+<text x="564" y="290" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#57606A" text-anchor="start">WHAT THE AGENT CAN USE</text>
+<rect x="564" y="304" width="120" height="34" rx="17" fill="#FFFFFF" stroke="#1F2328" stroke-width="1.5"/>
+<text x="624.0" y="326" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="600" fill="#1F2328" text-anchor="middle">read_logs</text>
+<text x="698" y="326" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#57606A" text-anchor="start">always there</text>
+<rect x="564" y="348" width="120" height="34" rx="17" fill="#FFFFFF" stroke="#1F2328" stroke-width="1.5"/>
+<text x="624.0" y="370" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="600" fill="#1F2328" text-anchor="middle">run_tests</text>
+<text x="698" y="370" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#57606A" text-anchor="start">always there</text>
+<rect x="564" y="392" width="216" height="34" rx="17" fill="#E6F4F1" stroke="#0F766E" stroke-width="1.5"/>
+<text x="672.0" y="414" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="600" fill="#0F766E" text-anchor="middle">deploy_to_production</text>
+<text x="794" y="414" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#0F766E" text-anchor="start">mounted</text>
+<line x1="468" y1="280" x2="532" y2="280" stroke="#9A5B00" stroke-width="2" marker-end="url(#aa)"/>
+<text x="500" y="262" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#9A5B00" text-anchor="middle">approve</text>
+<rect x="40" y="468" width="920" height="56" rx="10" fill="#FFF4DC" stroke="#9A5B00" stroke-width="1.5"/>
+<text x="500" y="492" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#9A5B00" text-anchor="middle">The agent cannot approve itself. Only your system can change the state.</text>
+<text x="500" y="512" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#1F2328" text-anchor="middle">A call to a tool that is not mounted is refused.</text>
 </svg>

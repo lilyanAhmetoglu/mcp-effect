@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { createServer, request } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
@@ -302,5 +302,41 @@ describe('a remote upstream over HTTP', () => {
         await expect(gateway.upstream('ftp', { url: 'ftp://example.com/mcp' })).rejects.toThrow(/http or https/);
         await expect(gateway.upstream('empty', {} as never)).rejects.toThrow(/either "command" or "url"/);
         expect(gateway.registeredTools()).toEqual([]);
+    });
+});
+
+describe('the examples in this repo', () => {
+    const example = (name: string) => fileURLToPath(new URL(`../examples/${name}`, import.meta.url));
+
+    it.each(['release', 'shop', 'multi-user'])('examples/%s/gateway.json is a valid config', async name => {
+        expect((await run(process.execPath, [cli, join(example(name), 'gateway.json'), '--check'])).stdout).toContain('config ok');
+    });
+
+    it('the release example mounts the deploy tool only after approval', async () => {
+        // Same config as the example, but in a temp folder so the test can write the state file.
+        const config = JSON.parse(await readFile(join(example('release'), 'gateway.json'), 'utf8'));
+        delete config.$schema;
+        config.upstreams.release.args = [join(example('release'), 'release-server.mjs')];
+        const stateFile = join(dir, 'state.json');
+        await writeFile(stateFile, await readFile(join(example('release'), 'state.json'), 'utf8'));
+        const configFile = join(dir, 'gateway.json');
+        await writeFile(configFile, JSON.stringify(config));
+
+        const client = new Client({ name: 'example-test', version: '1.0.0' }, { versionNegotiation: { mode: 'auto' } });
+        await client.connect(new StdioClientTransport({ command: process.execPath, args: [cli, configFile], stderr: 'ignore' }));
+        open.push(client);
+
+        expect(await toolNames(client)).toEqual(['release__read_logs', 'release__run_tests']);
+        await expect(client.callTool({ name: 'release__deploy_to_production', arguments: { build: '42' } })).rejects.toThrow(/Unknown tool/);
+        expect(client.getInstructions()).toContain('after a person has approved');
+
+        await writeFile(stateFile, JSON.stringify({ global: { deploy: { approved: true } } }));
+        await eventually(async () => expect(await toolNames(client)).toContain('release__deploy_to_production'), 5000);
+        const result = await client.callTool({ name: 'release__deploy_to_production', arguments: { build: '42' } });
+        expect(JSON.stringify(result.content)).toContain('Deployed build 42 to production');
+
+        await writeFile(stateFile, JSON.stringify({ global: { deploy: { approved: false } } }));
+        await eventually(async () => expect(await toolNames(client)).toEqual(['release__read_logs', 'release__run_tests']), 5000);
+        await expect(client.callTool({ name: 'release__deploy_to_production', arguments: { build: '42' } })).rejects.toThrow(/Unknown tool/);
     });
 });

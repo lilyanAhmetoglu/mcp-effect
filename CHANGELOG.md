@@ -5,6 +5,7 @@
 - Fixed: an upstream's own protocol metadata (its server name) no longer passes through to the client.
 - Added a Python client example and a multi-user HTTP example.
 - Added a release workflow for npm.
+- The README, the diagrams and the main example now use an approval-gated deploy tool. Added `examples/release`.
 
 ## 0.1.0
 

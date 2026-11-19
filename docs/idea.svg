@@ -21,11 +21,11 @@
 <text x="534" y="138" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#0F766E" text-anchor="start">mcp-effect</text>
 <text x="534" y="162" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="16" font-weight="600" fill="#1F2328" text-anchor="start">Tools mount when their deps change</text>
 <text x="534" y="198" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" fill="#1F2328" xml:space="preserve">gateway.useTools({</text>
-<text x="534" y="220" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" fill="#0F766E" xml:space="preserve">  deps: ['order.status'],</text>
-<text x="534" y="242" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" fill="#1F2328" xml:space="preserve">  tools: s =&gt; failed(s) ? ['refund'] : []</text>
+<text x="534" y="220" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" fill="#0F766E" xml:space="preserve">  deps: ['deploy.approved'],</text>
+<text x="534" y="242" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" fill="#1F2328" xml:space="preserve">  tools: s =&gt; approved(s) ? ['deploy'] : []</text>
 <text x="534" y="264" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" fill="#1F2328" xml:space="preserve">});</text>
 <rect x="534" y="298" width="362" height="40" rx="8" fill="#E6F4F1"/>
-<text x="550" y="323" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13.5" font-weight="600" fill="#0F766E" text-anchor="start">deps:  [order.status]  →  mount or unmount</text>
+<text x="550" y="323" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13.5" font-weight="600" fill="#0F766E" text-anchor="start">deps: [deploy.approved] → mount or unmount</text>
 <line x1="458" y1="232" x2="502" y2="232" stroke="#57606A" stroke-width="1.8" marker-end="url(#arrow)"/>
 <text x="480" y="218" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#57606A" text-anchor="middle">same</text>
 <text x="480" y="254" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#57606A" text-anchor="middle">idea</text>

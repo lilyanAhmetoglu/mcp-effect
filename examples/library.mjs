@@ -1,55 +1,52 @@
 // The whole idea in one file. Run it with: npm run example
 //
-// It starts a gateway with three tools, connects a real MCP client to it,
-// and shows how the tool list follows the state.
+// The agent can always read logs and run tests.
+// The deploy tool exists only after a person has approved.
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import { createGateway, getPath } from 'mcp-effect';
 
-const gateway = createGateway({
-    always: ['get_order'],
-    // Each caller gets its own state. Here the caller id comes from verified auth.
-    scope: ({ authInfo }) => authInfo?.clientId
-});
+const gateway = createGateway({ always: ['read_logs', 'run_tests'] });
 
 const say = text => ({ content: [{ type: 'text', text }] });
-gateway.tool({ name: 'get_order', description: 'Read an order' }, async ({ id }) => say(`Order ${id}: 2 items, 59.00 EUR`));
-gateway.tool({ name: 'refund_order', description: 'Refund an order' }, async ({ id }) => say(`Refunded order ${id}`));
-gateway.tool({ name: 'email_customer', description: 'Email the customer' }, async ({ id }) => say(`Emailed the customer of order ${id}`));
+gateway.tool({ name: 'read_logs', description: 'Read the logs of a build' }, async ({ build }) => say(`Build ${build}: no errors in the last hour`));
+gateway.tool({ name: 'run_tests', description: 'Run the tests of a build' }, async ({ build }) => say(`Build ${build}: 212 tests passed`));
+gateway.tool({ name: 'deploy_to_production', description: 'Deploy a build to production' }, async ({ build }) => say(`Deployed build ${build} to production`));
 
-// The rule. Read it like useEffect: when `order.status` changes, run again.
+// The rule. Read it like useEffect: when `deploy.approved` changes, run again.
 gateway.useTools({
-    deps: ['order.status'],
-    tools: state => (getPath(state, 'order.status') === 'failed' ? ['refund_order', 'email_customer'] : []),
-    hint: 'Refund and email tools appear when an order has failed.'
+    deps: ['deploy.approved'],
+    tools: state => (getPath(state, 'deploy.approved') === true ? ['deploy_to_production'] : []),
+    hint: 'The deploy tool appears after a person has approved the release.'
 });
 
-// Connect a real MCP client as "user:alice". No network: the client calls the handler directly.
+// Connect a real MCP client. No network: the client calls the handler directly.
 const handler = gateway.http();
-const alice = { token: 'demo', clientId: 'user:alice', scopes: [] };
 const client = new Client({ name: 'demo', version: '1.0.0' }, { versionNegotiation: { mode: 'auto' } });
 await client.connect(
     new StreamableHTTPClientTransport(new URL('http://demo.local/mcp'), {
-        fetch: (url, init) => handler.fetch(new Request(url, init), { authInfo: alice })
+        fetch: (url, init) => handler.fetch(new Request(url, init))
     })
 );
 const names = async () => (await client.listTools()).tools.map(tool => tool.name).join(', ');
 
-console.log('1. order is paid      ->', await names());
+console.log('1. not approved yet        ->', await names());
 
 try {
-    await client.callTool({ name: 'refund_order', arguments: { id: '42' } });
+    await client.callTool({ name: 'deploy_to_production', arguments: { build: '42' } });
 } catch (error) {
-    console.log('2. refund while paid  -> refused:', error.message);
+    console.log('2. deploy before approval  -> refused:', error.message);
 }
 
-await gateway.setState({ order: { status: 'failed' } }, { scope: 'user:alice' });
-console.log('3. order has failed   ->', await names());
+// A person clicks "Approve" in your own system. Your code tells the gateway.
+await gateway.setState({ deploy: { approved: true } });
+console.log('3. a person approved       ->', await names());
 
-const result = await client.callTool({ name: 'refund_order', arguments: { id: '42' } });
-console.log('4. refund while failed->', result.content[0].text);
+const result = await client.callTool({ name: 'deploy_to_production', arguments: { build: '42' } });
+console.log('4. deploy after approval   ->', result.content[0].text);
 
-await gateway.setState({ order: { status: 'refunded' } }, { scope: 'user:alice' });
-console.log('5. order is refunded  ->', await names());
+// The approval is used up. Your code takes it back.
+await gateway.setState({ deploy: { approved: false } });
+console.log('5. approval is used up     ->', await names());
 
 await client.close();
 await gateway.close();

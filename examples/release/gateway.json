@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schema/config.schema.json",
+  "name": "release-gateway",
+  "upstreams": {
+    "release": { "command": "node", "args": ["./release-server.mjs"] }
+  },
+  "always": ["release__read_logs", "release__run_tests"],
+  "rules": [
+    {
+      "name": "approved-deploy",
+      "when": { "deploy.approved": true },
+      "tools": ["release__deploy_to_production"],
+      "hint": "The deploy tool appears after a person has approved the release."
+    }
+  ],
+  "state": { "file": "./state.json" }
+}

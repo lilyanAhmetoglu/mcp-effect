@@ -1,41 +1,64 @@
 # mcp-effect
 
-**`useEffect` for MCP tools.** A small gateway that mounts tools only when state allows.
+**`useEffect` for MCP tools.** A small gateway that makes risky tools exist only when your system says so.
 
 [![CI](https://github.com/lilyanAhmetoglu/mcp-effect/actions/workflows/ci.yml/badge.svg)](https://github.com/lilyanAhmetoglu/mcp-effect/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![MCP 2026-07-28](https://img.shields.io/badge/MCP-2026--07--28-0F766E)
 
-![useEffect in React next to useTools in mcp-effect](docs/idea.svg)
+![A risky tool exists only after a person approves](docs/state-to-tools.svg)
 
 ## The problem
 
-An MCP client shows the model **every tool, all the time**.
+An agent with MCP sees **every tool, all the time**.
 
-- The model can call `refund_order` when no order has failed.
+Some tools are harmless, like "read the logs". Some are risky, like "deploy to production" or "send money".
+
+Today we protect the risky ones with a prompt: _"Only deploy after a person approved."_ Then we hope the agent listens.
+
+- The agent can still call the tool at the wrong moment.
 - A prompt injection can call it too.
-- Hundreds of tool definitions fill the context and cost money.
-
-Most fixes let the **model** decide what to load ("search for a tool, then use it").
-That saves tokens, but it is not a safety rule. The model still decides.
+- A prompt is not a rule. Nothing enforces it.
 
 ## The idea
 
-In `mcp-effect`, **state decides**. Not the model.
+In `mcp-effect`, **your system decides which tools exist**. The agent still thinks and decides. But it can only reach the tools that fit the current state.
 
 You write a rule like a React effect. It has dependencies. When they change, the rule runs again.
 The result of the rule is the list of tools that exist right now.
 
+![useEffect in React next to useTools in mcp-effect](docs/idea.svg)
+
 ```ts
 gateway.useTools({
-    deps: ['order.status'],
-    tools: state => (getPath(state, 'order.status') === 'failed' ? ['shop__refund_order'] : [])
+    deps: ['deploy.approved'],
+    tools: state => (getPath(state, 'deploy.approved') === true ? ['release__deploy_to_production'] : [])
 });
 ```
 
-![State decides which tools the model can see](docs/state-to-tools.svg)
+Two things make this a real rule:
 
-An unmounted tool is not only hidden. **A call to it is refused**, even from a client that still holds an old list.
+1. **The agent cannot change the state.** Only your own code can: an Approve button, a webhook, a database change.
+2. **An unmounted tool is refused, not only hidden.** This also holds for a client that still has an old tool list.
+
+### Good uses
+
+| Situation      | Rule                                                            |
+| -------------- | --------------------------------------------------------------- |
+| Approval       | The deploy tool exists only after a person approved.            |
+| Incidents      | Production write tools exist only while an incident is open.    |
+| Workflow stage | The transfer tool exists only after the identity check is done. |
+| Release freeze | All write tools disappear during a freeze.                      |
+| Plans          | Pro customers get the reporting tools. Free customers do not.   |
+
+A nice side effect: the agent sees fewer tools. That means less context and fewer wrong picks.
+
+### When you do not need this
+
+- **The step is always automatic.** If a failed payment should always be refunded, use a webhook. You do not need an agent for that.
+- **You only want to save tokens.** Tool search does that well, and it needs no rules.
+
+`mcp-effect` is for the case in between: you need the agent's judgment, but a risky tool should only be there at the right moment.
 
 ## How it works
 
@@ -49,21 +72,21 @@ An unmounted tool is not only hidden. **A call to it is refused**, even from a c
 
 ```mermaid
 sequenceDiagram
-    participant App as Your app
+    participant Sys as Your system
     participant C as MCP client
     participant G as mcp-effect
-    participant S as Shop server
+    participant S as Release server
 
     C->>G: tools/list
-    G-->>C: get_order
-    Note over App,G: An order fails in your system
-    App->>G: setState order.status = "failed"
+    G-->>C: read_logs, run_tests
+    Note over Sys,G: A person clicks Approve
+    Sys->>G: setState deploy.approved = true
     G--)C: notifications/tools/list_changed
     C->>G: tools/list
-    G-->>C: get_order, refund_order
-    C->>G: tools/call refund_order
+    G-->>C: read_logs, run_tests, deploy_to_production
+    C->>G: tools/call deploy_to_production
     G->>G: check the rules again, with fresh state
-    G->>S: tools/call refund_order
+    G->>S: tools/call deploy_to_production
     S-->>G: result
     G-->>C: result
 ```
@@ -80,11 +103,11 @@ npm run example
 You will see this. It is the real output of [`examples/library.mjs`](examples/library.mjs):
 
 ```text
-1. order is paid      -> get_order
-2. refund while paid  -> refused: Unknown tool: refund_order
-3. order has failed   -> email_customer, get_order, refund_order
-4. refund while failed-> Refunded order 42
-5. order is refunded  -> get_order
+1. not approved yet        -> read_logs, run_tests
+2. deploy before approval  -> refused: Unknown tool: deploy_to_production
+3. a person approved       -> deploy_to_production, read_logs, run_tests
+4. deploy after approval   -> Deployed build 42 to production
+5. approval is used up     -> read_logs, run_tests
 ```
 
 ## Install
@@ -107,15 +130,15 @@ This works with an agent written in **any language**, because the gateway is its
 ```json
 {
     "upstreams": {
-        "shop": { "command": "node", "args": ["./shop-server.mjs"] }
+        "release": { "command": "node", "args": ["./release-server.mjs"] }
     },
-    "always": ["shop__get_order"],
+    "always": ["release__read_logs", "release__run_tests"],
     "rules": [
         {
-            "name": "refunds",
-            "when": { "order.status": "failed" },
-            "tools": ["shop__refund_order", "shop__email_customer"],
-            "hint": "Refund and email tools appear when an order has failed."
+            "name": "approved-deploy",
+            "when": { "deploy.approved": true },
+            "tools": ["release__deploy_to_production"],
+            "hint": "The deploy tool appears after a person has approved the release."
         }
     ],
     "state": { "file": "./state.json" }
@@ -125,7 +148,7 @@ This works with an agent written in **any language**, because the gateway is its
 `state.json`:
 
 ```json
-{ "global": { "order": { "status": "paid" } }, "scopes": {} }
+{ "global": { "deploy": { "approved": false } }, "scopes": {} }
 ```
 
 Then point your MCP client at the gateway. For a client that takes `command` and `args`:
@@ -133,20 +156,24 @@ Then point your MCP client at the gateway. For a client that takes `command` and
 ```json
 {
     "mcpServers": {
-        "shop": { "command": "npx", "args": ["mcp-effect", "/full/path/to/gateway.json"] }
+        "release": { "command": "npx", "args": ["mcp-effect", "/full/path/to/gateway.json"] }
     }
 }
 ```
 
 Now change `state.json` from any program, in any language. The tools follow.
-A working copy of these files is in [`examples/shop`](examples/shop).
+A working copy of these files is in [`examples/release`](examples/release).
 
 See the [config reference](docs/config.md) for every field, the HTTP mode, and the state API.
 
-### From Python, or any other language
+### More examples
 
-[`examples/python-client`](examples/python-client) drives the gateway with the official Python MCP SDK, over stdio and over HTTP.
-[`examples/multi-user`](examples/multi-user) shows two callers with different tools.
+| Example                                            | What it shows                                                        |
+| -------------------------------------------------- | -------------------------------------------------------------------- |
+| [`examples/release`](examples/release)             | A deploy tool that needs approval. Config file and state file.       |
+| [`examples/multi-user`](examples/multi-user)       | Two callers over HTTP. Each has their own state and their own tools. |
+| [`examples/python-client`](examples/python-client) | The gateway driven from Python, over stdio and over HTTP.            |
+| [`examples/library.mjs`](examples/library.mjs)     | The library, in one file.                                            |
 
 ## Use it as a library
 
@@ -154,27 +181,27 @@ See the [config reference](docs/config.md) for every field, the HTTP mode, and t
 import { createGateway, getPath } from 'mcp-effect';
 
 const gateway = createGateway({
-    always: ['shop__get_order'],
+    always: ['release__read_logs', 'release__run_tests'],
     // Who is calling? Build this from verified auth only.
     scope: ({ authInfo }) => authInfo?.clientId
 });
 
-// Put a real MCP server behind the gateway. Its tools are named shop__<tool>.
-await gateway.upstream('shop', { command: 'node', args: ['./shop-server.mjs'] });
+// Put a real MCP server behind the gateway. Its tools are named release__<tool>.
+await gateway.upstream('release', { command: 'node', args: ['./release-server.mjs'] });
 
 // The rule. Read it like useEffect.
 gateway.useTools({
-    deps: ['order.status'],
-    tools: state => (getPath(state, 'order.status') === 'failed' ? ['shop__refund_order'] : []),
-    hint: 'Refund tools appear when an order has failed.'
+    deps: ['deploy.approved'],
+    tools: state => (getPath(state, 'deploy.approved') === true ? ['release__deploy_to_production'] : []),
+    hint: 'The deploy tool appears after a person has approved the release.'
 });
 
 // Serve it. Pick one.
 gateway.stdio(); // for desktop clients
 const handler = gateway.http(); // handler.fetch(request, { authInfo }) for servers
 
-// Later, from your own code (a webhook, a database trigger, a cron job):
-await gateway.setState({ order: { status: 'failed' } }, { scope: 'user:alice' });
+// Later, from your own code (an Approve button, a webhook, a database trigger):
+await gateway.setState({ deploy: { approved: true } }, { scope: 'team:web' });
 ```
 
 ### Rules
@@ -185,7 +212,7 @@ A rule can be a function or plain data.
 // A function. `deps` works like the useEffect dependency array:
 // the function runs again only when one of these state values changes.
 gateway.useTools({
-    deps: ['plan', 'order.status'],
+    deps: ['plan'],
     tools: state => (state.plan === 'pro' ? ['reports__*'] : [])
 });
 
@@ -196,7 +223,7 @@ gateway.useTools({
 });
 ```
 
-- `*` is a wildcard. `shop__*` means every tool of the `shop` upstream.
+- `*` is a wildcard. `release__*` means every tool of the `release` upstream.
 - Operators: `eq`, `ne`, `in`, `nin`, `gt`, `gte`, `lt`, `lte`, `exists`, `contains`.
 - Combine conditions with `all`, `any` and `not`.
 - If a rule throws an error, it mounts **nothing**. The gateway fails closed.
@@ -205,15 +232,15 @@ gateway.useTools({
 
 State is a plain JSON object. There is one **global** state, and one state per **scope**.
 
-A scope is a caller: a user, a tenant, an API key. A caller sees the global state with their own state on top.
+A scope is a caller: a user, a team, a tenant, an API key. A caller sees the global state with their own state on top.
 
 ```ts
-await gateway.setState({ maintenance: true }); // everyone
-await gateway.setState({ order: { status: 'failed' } }, { scope: 'user:alice' }); // only Alice
-await gateway.setState({ order: null }, { scope: 'user:alice' }); // null deletes a key
+await gateway.setState({ freeze: true }); // everyone
+await gateway.setState({ deploy: { approved: true } }, { scope: 'team:web' }); // only the web team
+await gateway.setState({ deploy: null }, { scope: 'team:web' }); // null deletes a key
 ```
 
-Alice never sees tools that are mounted for Bob. Bob cannot call them either.
+One team never sees tools that are mounted for another team. It cannot call them either.
 
 ### Hints
 
@@ -230,6 +257,8 @@ gateway.on('change', ({ scope, mounted, unmounted }) => {
 
 Clients that subscribed get `notifications/tools/list_changed`. Many state writes in a short time become one notification.
 
+A changing tool list can break prompt caching in the client. So this fits state that changes sometimes, like an approval. It does not fit state that changes every few seconds.
+
 ## Why state must live outside the conversation
 
 The MCP spec from 2026-07-28 says the tool list **must not** change per connection, and must not change as a side effect of another request on that connection.
@@ -237,8 +266,8 @@ So the old trick "call `login`, then new tools appear" is no longer allowed.
 
 The spec still allows two things, and `mcp-effect` is built on exactly these:
 
-| Allowed by the spec                                 | In mcp-effect                |
-| --------------------------------------------------- | ---------------------------- |
+| Allowed by the spec                                  | In mcp-effect                |
+| ---------------------------------------------------- | ---------------------------- |
 | The list changes for everyone, from an outside event | Global state                 |
 | The list differs by the caller's authorization       | Scopes, from verified `auth` |
 
@@ -248,7 +277,7 @@ Read more in [docs/design.md](docs/design.md).
 
 ## What is tested
 
-`npm test` runs 85 tests. They use the official MCP SDK client against a real gateway.
+`npm test` runs 89 tests. They use the official MCP SDK client against a real gateway.
 
 - Both protocol versions: 2026-07-28 and the older 2025 handshake.
 - Both transports: stdio and HTTP.
@@ -261,11 +290,11 @@ In our own test run, the first `tools/list` of a scope took about 0.5 ms, and la
 
 Three other clients were also checked against the built command:
 
-| Client                           | What was checked                                                              |
-| -------------------------------- | ----------------------------------------------------------------------------- |
-| Official Python MCP SDK          | Listing, calling, refusals, notifications, two users over HTTP. Runs in CI.   |
-| MCP Inspector (command line)     | Listing and calling, with the state file in both positions.                   |
-| Claude Code                      | `claude mcp add` and the connection health check. No model conversation yet.  |
+| Client                       | What was checked                                                             |
+| ---------------------------- | ---------------------------------------------------------------------------- |
+| Official Python MCP SDK      | Listing, calling, refusals, notifications, two users over HTTP. Runs in CI.  |
+| MCP Inspector (command line) | Listing and calling, with the state file in both positions.                  |
+| Claude Code                  | `claude mcp add` and the connection health check. No model conversation yet. |
 
 It has not been tested with every MCP client. If your client behaves differently, please [open an issue](https://github.com/lilyanAhmetoglu/mcp-effect/issues).
 
@@ -281,12 +310,12 @@ Details are in [docs/design.md](docs/design.md#running-many-copies).
 
 Other tools are close, and they are good. Pick the one that fits.
 
-| Tool                                                                                   | Who decides which tools exist? |
-| -------------------------------------------------------------------------------------- | ------------------------------ |
-| Tool search and "progressive disclosure" gateways                                      | The model, by searching        |
-| [FastMCP](https://gofastmcp.com/servers/visibility) visibility                          | Your server code, call by call |
-| [`@zap-studio/webmcp-react`](https://jsr.io/@zap-studio/webmcp-react) `useWebMCPTool`   | A React component in a browser |
-| **mcp-effect**                                                                         | Rules over outside state, in front of any MCP server |
+| Tool                                                                                  | Who decides which tools exist?                       |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Tool search and "progressive disclosure" gateways                                     | The model, by searching                              |
+| [FastMCP](https://gofastmcp.com/servers/visibility) visibility                         | Your server code, call by call                       |
+| [`@zap-studio/webmcp-react`](https://jsr.io/@zap-studio/webmcp-react) `useWebMCPTool`  | A React component in a browser                       |
+| **mcp-effect**                                                                        | Rules over outside state, in front of any MCP server |
 
 ## Limits
 
@@ -294,6 +323,7 @@ Other tools are close, and they are good. Pick the one that fits.
 - Upstream tools that ask the user for more input in the middle of a call are not supported yet.
 - A notification on HTTP goes to every subscribed client, not only the scope that changed. Each client then gets its own list.
 - The built-in store is in memory. State is gone after a restart, unless you use a state file or your own store.
+- A mounted tool can still be misused. Mounting is a gate, not a review of what the agent does with the tool.
 
 ## Roadmap
 

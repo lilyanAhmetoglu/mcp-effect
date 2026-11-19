@@ -15,9 +15,9 @@
 <text x="140" y="192" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#57606A" text-anchor="middle">or your own agent</text>
 <text x="140" y="232" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#57606A" text-anchor="middle">sees only</text>
 <rect x="72" y="244" width="136" height="30" rx="15" fill="#FFFFFF" stroke="#1F2328" stroke-width="1.5"/>
-<text x="140.0" y="264" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#1F2328" text-anchor="middle">get_order</text>
+<text x="140.0" y="264" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#1F2328" text-anchor="middle">read_logs</text>
 <rect x="72" y="280" width="136" height="30" rx="15" fill="#E6F4F1" stroke="#0F766E" stroke-width="1.5"/>
-<text x="140.0" y="300" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#0F766E" text-anchor="middle">refund_order</text>
+<text x="140.0" y="300" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#0F766E" text-anchor="middle">deploy</text>
 <rect x="310" y="104" width="340" height="256" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.5"/>
 <text x="480" y="136" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#0F766E" text-anchor="middle">mcp-effect gateway</text>
 <rect x="330" y="154" width="300" height="46" rx="8" fill="#FBFAF7" stroke="#D0D7DE" stroke-width="1.5"/>
@@ -30,17 +30,17 @@
 <text x="346" y="287" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#0F766E" text-anchor="start">3  Check on every call</text>
 <text x="346" y="306" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1F2328" text-anchor="start">An unmounted tool is refused.</text>
 <rect x="720" y="104" width="200" height="118" rx="12" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.5"/>
-<text x="820" y="132" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2328" text-anchor="middle">shop server</text>
+<text x="820" y="132" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2328" text-anchor="middle">release server</text>
 <rect x="752" y="142" width="136" height="30" rx="15" fill="#FFFFFF" stroke="#1F2328" stroke-width="1.5"/>
-<text x="820.0" y="162" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#1F2328" text-anchor="middle">get_order</text>
+<text x="820.0" y="162" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#1F2328" text-anchor="middle">read_logs</text>
 <rect x="752" y="180" width="136" height="30" rx="15" fill="#E6F4F1" stroke="#0F766E" stroke-width="1.5"/>
-<text x="820.0" y="200" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#0F766E" text-anchor="middle">refund_order</text>
+<text x="820.0" y="200" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#0F766E" text-anchor="middle">deploy</text>
 <rect x="720" y="240" width="200" height="120" rx="12" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.5"/>
-<text x="820" y="268" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2328" text-anchor="middle">mail server</text>
+<text x="820" y="268" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2328" text-anchor="middle">payments server</text>
 <rect x="744" y="280" width="152" height="30" rx="15" fill="#F1F2F4" stroke="#8C959F" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="820.0" y="300" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#8C959F" text-anchor="middle">send_email</text>
+<text x="820.0" y="300" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#8C959F" text-anchor="middle">send_money</text>
 <rect x="744" y="318" width="152" height="30" rx="15" fill="#F1F2F4" stroke="#8C959F" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="820.0" y="338" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#8C959F" text-anchor="middle">send_campaign</text>
+<text x="820.0" y="338" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#8C959F" text-anchor="middle">refund_payment</text>
 <line x1="240" y1="190" x2="304" y2="190" stroke="#57606A" stroke-width="1.8" marker-end="url(#arrow)"/>
 <text x="272" y="180" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#57606A" text-anchor="middle">list</text>
 <line x1="304" y1="250" x2="246" y2="250" stroke="#57606A" stroke-width="1.8" marker-end="url(#arrow)"/>
@@ -52,7 +52,7 @@
 <rect x="180" y="420" width="600" height="100" rx="12" fill="#FFF4DC" stroke="#9A5B00" stroke-width="1.5"/>
 <text x="480" y="450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#9A5B00" text-anchor="middle">State comes from outside the conversation</text>
 <rect x="204" y="468" width="126" height="32" rx="8" fill="#FFFFFF" stroke="#9A5B00" stroke-width="1.2"/>
-<text x="267" y="489" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#1F2328" text-anchor="middle">your app</text>
+<text x="267" y="489" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#1F2328" text-anchor="middle">an Approve button</text>
 <rect x="346" y="468" width="126" height="32" rx="8" fill="#FFFFFF" stroke="#9A5B00" stroke-width="1.2"/>
 <text x="409" y="489" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#1F2328" text-anchor="middle">a webhook</text>
 <rect x="488" y="468" width="126" height="32" rx="8" fill="#FFFFFF" stroke="#9A5B00" stroke-width="1.2"/>
